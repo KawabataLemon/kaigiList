@@ -1,5 +1,5 @@
-# kaigiList
-GoogleCalendarから会議室の予定を取得して一覧表示
+Googleカレンダーのリソースの状況を取得して一覧表示するElectronアプリ
 
 #事前に
 GoogleDeveloperConsoleでAPIを作成してシークレットを取得する
+
