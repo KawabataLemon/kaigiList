@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" src="script.js"></script>
+<link rel="stylesheet" href="js/jquery-ui-1.11.4/jquery-ui.min.css"></link>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<script type="text/javascript" src="js/jquery-ui-1.11.4/jquery-ui.min.js"></script>
+<script src="index.js"></script>
+<script>
+	//ダイアログ表示用
+	$(function() {
+	  $( "#dialog" ).dialog({
+		autoOpen: false,
+		width:400,
+		height: 270,
+		title: "あなたのGoogleアカウントとの認証",
+		modal: true,
+		show: {
+		  effect: "explode",
+		  duration: 500
+		},
+		hide: {
+		  effect: "explode",
+		  duration: 500
+		}
+	  });
+	});
+
+	// IPC通信を行う
+	var ipcRenderer = require( 'electron' ).ipcRenderer;
+		window.onload = function () {
+		procAsync();
+	};
+
+	// 非同期に通信を行う
+	function procAsync() {
+		//authURLを受け取り、inputboxで入力させる
+		ipcRenderer.on('async-url', function(event,arg) {
+		  var html = "<b><a href='" + arg + "' target='_blank'>こちらをクリック</a></b>して、認証用コードを取得し、送信して下さい。"
+		  document.getElementById("authman").innerHTML = html;
+		  $( "#dialog" ).dialog( "open" );
+		  $( "#dialog" ).dialog("moveToTop");
+		});
+		//メッセージを受け取る
+		ipcRenderer.on('message', function(event,arg) {
+		  alert(arg);
+		});
+		//CalendarAPIで取得したデータを設定
+		ipcRenderer.on('setdata', function(event,arg) {
+			$("#kaigi").empty();
+			arg.forEach(function(data) {
+				$("#kaigi").append("<p>" + data.time + " " + data.title + ' <b>' + data.description + "</b></p>");
+			});
+		});
+		// メインプロセスに引数を送信
+		ipcRenderer.send('async', "");
+	}
+
+	function gcodeinput(){
+		var values = document.getElementById("inputman").value;
+		$( "#dialog" ).dialog( "close" );
+		//validation処理
+		if(values == ""){
+			alert("コードが空です");
+			return;
+		}
+		// メインプロセスに引数を送信
+		ipcRenderer.send('async', values);
+	}
+
+	//カレンダーデータ取得
+	function getData(){
+		ipcRenderer.send('async', 0);
+		//10分間隔で更新
+		setTimeout(getData , 600000);
+	}
+
+</script>
+<title>会議室</title>
+</head>
+<body>
+	<div align="center">
+		<h1 id="header">本日の会議室予定一覧</h1>
+			<input type="button" value="データ取得" onClick="getData()">
+		<div id="kaigi" align="left" style="margin-left:50px;">
+	</div>
+
+	<!-- googke認証ダイアログ -->
+	<div id="dialog" title="Basic dialog">
+		<p id="authman"></p>
+		<center>
+			<p><input type="text" name="name" size="40" maxlength="100" id="inputman"></p>
+			<p><button type="submit" class="share" value="送信" title="コード送信" width="200px" style="font-size: 14px;vertical-align: middle" onclick="gcodeinput();">送信する</button></p>
+		</center>
+	</div>
+</body>
+</html>
