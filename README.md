@@ -1,0 +1,5 @@
+# kaigiList
+GoogleCalendarから会議室の予定を取得して一覧表示
+
+#事前に
+GoogleDeveloperConsoleでAPIを作成してシークレットを取得する
