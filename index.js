@@ -26,7 +26,7 @@ app.on('ready', function() {
   // メイン画面の表示。ウィンドウの幅、高さを指定できる
   mainWindow = new BrowserWindow({
 	  'width': 450,
-	  'height': 450,
+	  'height': 650,
     "transparent": false,    // ウィンドウの背景を透過
     "frame": true,     // 枠の無いウィンドウ
     "resizable": false,  // ウィンドウのリサイズを禁止
@@ -145,7 +145,7 @@ function callCalendarApi(auth) {
   var calendar = google.calendar('v3');
   calendar.events.list({
     auth: auth,
-    calendarId: 'techno-wing.co.jp_38353836303238362d363530@resource.calendar.google.com',
+    calendarId: 'xxxxx@resource.calendar.google.com',
     timeMin: startTime,
     timeMax: endTime,
     singleEvents: true,
@@ -174,8 +174,10 @@ function callCalendarApi(auth) {
         var time = '0' + dt.getMinutes();
         time = time.substr(time.length -2,2);
         item.time = hour + ':' + time;
+        //担当者
+        item.owner = event.organizer.displayName;
         //件名
-        item.title = event.organizer.displayName;
+        item.title = event.summary;
         //詳細
         if(event.description !== undefined){
           item.description = event.description;

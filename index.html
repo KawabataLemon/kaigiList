@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<script type="text/javascript" src="script.js"></script>
+<script type="text/javascript" src="js/script.js"></script>
 <link rel="stylesheet" href="js/jquery-ui-1.11.4/jquery-ui.min.css"></link>
 <link rel="stylesheet" type="text/css" href="css/style.css">
 <script type="text/javascript" src="js/jquery-ui-1.11.4/jquery-ui.min.js"></script>
@@ -50,7 +50,13 @@
 		ipcRenderer.on('setdata', function(event,arg) {
 			$("#kaigi").empty();
 			arg.forEach(function(data) {
-				$("#kaigi").append("<p>" + data.time + " " + data.title + ' <b>' + data.description + "</b></p>");
+				var d = "<div style=\"border:#d0d0d0 solid 1px;\"><span>" +
+				        data.time + "</span><br/>" +
+								"<span>" + data.owner + "</span><br/>" +
+								"<span>" + data.title + "</span><br/>" +
+								'<span><b>' + data.description + "</b></span></div>";
+				//$("#kaigi").append("<p>" + data.time + " " + data.title + ' <b>' + data.description + "</b></p>");
+				$("#kaigi").append(d);
 			});
 		});
 		// メインプロセスに引数を送信
@@ -81,9 +87,10 @@
 </head>
 <body>
 	<div align="center">
-		<h1 id="header">本日の会議室予定一覧</h1>
+		<h1 id="header">今日の会議室予約</h1>
 			<input type="button" value="データ取得" onClick="getData()">
-		<div id="kaigi" align="left" style="margin-left:50px;">
+			<input type="button" value="印刷する" onclick="window.print();" />
+		<div id="kaigi" align="left" style="margin-left:20px;">
 	</div>
 
 	<!-- googke認証ダイアログ -->

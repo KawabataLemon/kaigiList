@@ -1,1 +1,0 @@
-var $ = jQuery = require("./js/jquery-ui-1.11.4/external/jquery/jquery.js");
